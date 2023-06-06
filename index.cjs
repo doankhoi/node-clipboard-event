@@ -1,6 +1,6 @@
-const { EventEmitter } = require('events');
-const path = require('path');
-const { execFile } = require('child_process');
+const { EventEmitter } = require("events");
+const path = require("path");
+const { execFile } = require("child_process");
 
 class ClipboardEventListener extends EventEmitter {
   constructor() {
@@ -9,27 +9,28 @@ class ClipboardEventListener extends EventEmitter {
   }
 
   startListening() {
-
     const { platform } = process;
-    if (platform === 'win32') {
-      this.child = execFile(path.join(__dirname, 'platform/clipboard-event-handler-win32.exe'));
-    }
-    else if (platform === 'linux') {
-      this.child = execFile(path.join(__dirname, 'platform/clipboard-event-handler-linux'));
-    }
-    else if (platform === 'darwin') {
-      this.child = execFile(path.join(__dirname, 'platform/clipboard-event-handler-mac'));
-    }
-    else {
-      throw 'Not yet supported';
+    if (platform === "win32") {
+      this.child = execFile(
+        path.join(__dirname, "platform/clipboard-event-handler-win32.exe")
+      );
+    } else if (platform === "linux") {
+      this.child = execFile(
+        path.join(__dirname, "platform/clipboard-event-handler-linux")
+      );
+    } else if (platform === "darwin") {
+      this.child = execFile(
+        path.join(__dirname, "platform/node-clipboard-event-apple")
+      );
+    } else {
+      throw "Not yet supported";
     }
 
-    this.child.stdout.on('data', (data) => {
-      if (data.trim() === 'CLIPBOARD_CHANGE') {
-        this.emit('change');
+    this.child.stdout.on("data", (data) => {
+      if (data.trim() === "CLIPBOARD_CHANGE") {
+        this.emit("change");
       }
     });
-
   }
 
   stopListening() {
