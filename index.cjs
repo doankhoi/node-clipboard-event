@@ -20,7 +20,7 @@ class ClipboardEventListener extends EventEmitter {
       );
     } else if (platform === "darwin") {
       this.child = execFile(
-        path.join(__dirname, "platform/node-clipboard-event-apple")
+        path.join(__dirname, "platform/clipboard-event-handler-mac")
       );
     } else {
       throw "Not yet supported";
@@ -30,6 +30,14 @@ class ClipboardEventListener extends EventEmitter {
       if (data.trim() === "CLIPBOARD_CHANGE") {
         this.emit("change");
       }
+    });
+
+    this.child.stdout.on("error", (err) => {
+      console.log("Error: ", err);
+    });
+
+    this.child.on("error", (err) => {
+      console.log("Error: ", err);
     });
   }
 
